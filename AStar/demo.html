@@ -14,6 +14,7 @@
 		#ul1 {
 			height: auto;
 			overflow: hidden;
+			margin: 50px auto;
 			border: 1px solid #000;
 			border-right: none;
 			border-bottom: none;
@@ -24,6 +25,21 @@
 			border-top: none;
 			border-left: none;
 			float: left;
+		}
+		#ul1 li.start {
+			background: blue;
+		}
+		#ul1 li.process {
+			background: green;
+		}
+		#ul1 li.end {
+			background: red;
+		}
+		#input1 {
+			position:absolute;
+			top: 10px;
+			left: 50%;
+			margin-left: -20px;
 		}
 	</style>
 </head>
@@ -36,9 +52,54 @@
 		var oUl = document.getElementById("ul1");
 		var oBtn = document.getElementById("input1");
 		var oInput = document.querySelector("li");
+		// 地图中可用123来分别表示起始方块、障碍物方块、结束位置方块
 		var map = [
-			
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 		]
+		var cols = Math.sqrt(map.length);
+		console.log(cols);
+		var sizeGird = 20;
+		init();
+		function init(){
+			creatMap();
+		}
+		// 下面创建网格生成之后对oUl宽度进行约束，得到正方形网格
+		oUl.style.width = cols*(sizeGird + 1) + "px";
+		function creatMap(){
+			for(var i=0;i<map.length;i++){
+				var li = document.createElement("li");
+				li.style.width = sizeGird + "px";
+				li.style.height = sizeGird + "px";
+				oUl.appendChild(li);
+				if(map[i] === 1){
+					li.className = "start";
+				}else if (map[i] === 2) {
+					li.className = "process";
+				}else if (map[i] === 3) {
+					li.className = "end";
+				}
+			}
+		}
+		//添加三个样式分别表示起始位置方块、障碍物方块、结束位置方块
 	</script>
 </body>
 </html>
