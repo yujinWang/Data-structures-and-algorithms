@@ -52,6 +52,13 @@
 		var oUl = document.getElementById("ul1");
 		var oBtn = document.getElementById("input1");
 		var oInput = document.querySelector("li");
+		// 起始节点和目标节点
+		var beginLi = document.getElementsByClassName("start");
+		var endLi = document.getElementsByClassName("end");
+		// 收集open队列数组和close队列数组
+		var openArr = [];
+		var closeArr = [];
+
 		// 地图中可用123来分别表示起始方块、障碍物方块、结束位置方块
 		var map = [
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -81,6 +88,9 @@
 		init();
 		function init(){
 			creatMap();
+			oInput.onclick = function(){
+				openFn();
+			}
 		}
 		// 下面创建网格生成之后对oUl宽度进行约束，得到正方形网格
 		oUl.style.width = cols*(sizeGird + 1) + "px";
@@ -92,12 +102,41 @@
 				oUl.appendChild(li);
 				if(map[i] === 1){
 					li.className = "start";
+					openArr.push(li);
 				}else if (map[i] === 2) {
 					li.className = "process";
 				}else if (map[i] === 3) {
 					li.className = "end";
+					closeArr.push(li);
 				}
 			}
+		}
+		// 具体操作-每次将开放队列中的那个点之后放到关闭队列中，不用再去查找了
+		// 开放队列，也就是nodeLi下一个可能去的点
+		function openFn(){
+			// var nowLi = openArr.shift();
+
+		}
+		// 关闭队列，nodeLi不可能再去的点
+		function closeFn(){
+
+		}
+		//nodeLi节点估价函数
+		function f(nodeLi){
+			return g(nodeLi) + h(nodeLi);
+		}
+		//起始点到nodeLi节点实际代价-这里理解为距离-x/y分别为横边和纵边
+		//在此谁减谁没关系，函数最终结果是要计算出发点到nodeLi节点的距离，需要开平方的
+		function g(nodeLi){
+			var a = nodeLi.offsetLeft - beginLi[0].offsetLeft;
+			var b = nodeLi.offsetTop - beginLi[0].offsetTop;
+			return Math.sqrt(a*a + b*b);
+		}
+		//nodeLi节点到目标点实际代价
+		function h(nodeLi){
+			var a = endLi[0].offsetLeft - nodeLi.offsetLeft;
+			var b = endLi[0].offsetTop - nodeLi.offsetTop;
+			return Math.sqrt(a * a + b * b);
 		}
 		//添加三个样式分别表示起始位置方块、障碍物方块、结束位置方块
 	</script>
