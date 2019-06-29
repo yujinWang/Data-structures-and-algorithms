@@ -50,8 +50,7 @@
 	<input type="button" value="开始寻路" id="input1">
 	<script>
 		var oUl = document.getElementById("ul1");
-		var oBtn = document.getElementById("input1");
-		var oInput = document.querySelector("li");
+		var oInput = document.getElementById("input1");
 		// 起始节点和目标节点
 		var beginLi = document.getElementsByClassName("start");
 		var endLi = document.getElementsByClassName("end");
@@ -83,7 +82,6 @@
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 		]
 		var cols = Math.sqrt(map.length);
-		console.log(cols);
 		var sizeGird = 20;
 		init();
 		function init(){
@@ -105,21 +103,52 @@
 					openArr.push(li);
 				}else if (map[i] === 2) {
 					li.className = "process";
+					closeArr.push(li);
 				}else if (map[i] === 3) {
 					li.className = "end";
-					closeArr.push(li);
 				}
 			}
 		}
+		var oLi = document.querySelectorAll("li");
 		// 具体操作-每次将开放队列中的那个点之后放到关闭队列中，不用再去查找了
 		// 开放队列，也就是nodeLi下一个可能去的点
 		function openFn(){
-			// var nowLi = openArr.shift();
-
+			// 将每个开放队列中的元素取出然后放到关闭队列中
+			// 这样的效果就是每走一步会给关闭队列中新增一个元素，关闭队列无需再去检测这个元素了
+			var nowLi = openArr.shift();
+			// 将当前方块添加到关闭队列中
+			closeFn(nowLi);
+			// 查找nowLi周围未经走过的元素-返回一个数组集合
+			findLi(nowLi);
+			console.log(openArr)
+		}
+		function findLi(nowLi){
+			var result = [];
+			for(var i=0;i< oLi.length;i++){
+				if(filterLi(oLi[i])){
+					result.push(oLi[i]);
+				}
+			}
+			function filterLi(nowLi){
+				for(var i=0;i<closeArr.length;i++){
+					if(closeArr[i] == nowLi){
+						return false;
+					}
+					// return true;  开始写在了这里，发现怎么老是有些项没排除...
+				}
+				return true; //正确的姿势
+			}
+			// 此时得到的result是没有障碍物的数组集合-然后找到和这个点相邻的元素
+			// 周围可能方块的寻找当水平距离和垂直距离小于方块大小
+			for(var i=0;i<result.length;i++){
+				if((Math.abs(nowLi.offsetLeft - result[i].offsetLeft) <= sizeGird + 1) && (Math.abs(nowLi.offsetTop - result[i].offsetTop) <= sizeGird + 1)){
+					openArr.push(result[i]);
+				}
+			}
 		}
 		// 关闭队列，nodeLi不可能再去的点
-		function closeFn(){
-
+		function closeFn(nowLi){
+			closeArr.push(nowLi);
 		}
 		//nodeLi节点估价函数
 		function f(nodeLi){
