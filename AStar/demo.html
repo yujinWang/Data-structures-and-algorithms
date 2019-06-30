@@ -60,13 +60,13 @@
 
 		// 地图中可用123来分别表示起始方块、障碍物方块、结束位置方块
 		var map = [
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -87,6 +87,7 @@
 		function init(){
 			creatMap();
 			oInput.onclick = function(){
+
 				openFn();
 			}
 		}
@@ -116,11 +117,22 @@
 			// 将每个开放队列中的元素取出然后放到关闭队列中
 			// 这样的效果就是每走一步会给关闭队列中新增一个元素，关闭队列无需再去检测这个元素了
 			var nowLi = openArr.shift();
+			// 递归终止条件-当nowLi是endLi的时候
+			if(nowLi == endLi[0]){
+				// 到达终点后需要输出走过的路线
+				showLine();
+				return;
+			}
 			// 将当前方块添加到关闭队列中
 			closeFn(nowLi);
 			// 查找nowLi周围未经走过的元素-返回一个数组集合
 			findLi(nowLi);
-			console.log(openArr)
+			//排序得到那个最小的点
+			openArr.sort(function(a,b){
+				return a.num - b.num;
+			})
+			// 然后重复openFn继续寻找下一个点
+			openFn();
 		}
 		function findLi(nowLi){
 			var result = [];
@@ -136,12 +148,21 @@
 					}
 					// return true;  开始写在了这里，发现怎么老是有些项没排除...
 				}
+				// 需同时过滤openArr，因为走到下一个点后openArr中存在重复项
+				for (var i = 0; i < openArr.length; i++) {
+					if (openArr[i] == nowLi) {
+						return false;
+					}
+				}
 				return true; //正确的姿势
 			}
 			// 此时得到的result是没有障碍物的数组集合-然后找到和这个点相邻的元素
 			// 周围可能方块的寻找当水平距离和垂直距离小于方块大小
 			for(var i=0;i<result.length;i++){
 				if((Math.abs(nowLi.offsetLeft - result[i].offsetLeft) <= sizeGird + 1) && (Math.abs(nowLi.offsetTop - result[i].offsetTop) <= sizeGird + 1)){
+					// 此时需要记录每一个点的估价函数值，从而可以得到最小的那个点，添加一个自定义属性来记录
+					result[i].num = f(result[i]);
+					result[i].parent = nowLi;
 					openArr.push(result[i]);
 				}
 			}
@@ -149,6 +170,27 @@
 		// 关闭队列，nodeLi不可能再去的点
 		function closeFn(nowLi){
 			closeArr.push(nowLi);
+		}
+		// 走过路线
+		function showLine(){
+			var result = [];
+			var laseLi = closeArr.pop();
+			var iNow = 0;
+			findParent(laseLi);
+			function findParent(li){
+				result.unshift(li);
+				if(li.parent == beginLi[0]){
+					return;
+				}
+				findParent(li.parent);
+			}
+			var timer = setInterval(function(){
+				result[iNow].style.background = "pink";
+				iNow++;
+				if(iNow == result.length){
+					clearInterval(timer);
+				}
+			},500)
 		}
 		//nodeLi节点估价函数
 		function f(nodeLi){
