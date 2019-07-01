@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			list-style: none;
+		}
+		#ul1 {
+			margin: 20px auto;
+			overflow: hidden;
+			border: 1px solid #000;
+			border-right: none;
+			border-bottom: none; 
+		}
+		#ul1 li {
+			float: left;
+			border: 1px solid #000;
+			border-left: none;
+			border-top: none;
+		}
+	</style>
+</head>
+<body>
+	<ul id="ul1">
+
+	</ul>
+	<script>
+		var oUl = document.getElementById("ul1");
+		var oLi = document.getElementsByTagName("li");
+		var sizeGrid = 50;
+		var num = 8;
+		init();
+		function init(){
+			createGird();
+		}
+		function createGird(){
+			var len = num*num;
+			oUl.style.width = num * (sizeGrid + 1) + "px";
+			for(var i=0;i< len;i++){
+				var li = document.createElement("li");
+				li.style.width = sizeGrid+"px";
+				li.style.height = sizeGrid + "px";
+				oUl.appendChild(li);
+			}
+			// 由于要检测横竖斜是否有在一条线上的，辅助方式是给每一个网格建立对应的横纵坐标
+			for(var i=0;i<num;i++){
+				for(var j=0;j<num;j++){
+					oLi[i*num+j].innerHTML = j+","+i;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
