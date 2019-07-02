@@ -34,10 +34,11 @@
 		var oUl = document.getElementById("ul1");
 		var oLi = document.getElementsByTagName("li");
 		var sizeGrid = 50;
-		var num = 8;
+		var num = 4;
 		init();
 		function init(){
 			createGird();
+			setQueen(0);
 		}
 		function createGird(){
 			var len = num*num;
@@ -46,12 +47,35 @@
 				var li = document.createElement("li");
 				li.style.width = sizeGrid+"px";
 				li.style.height = sizeGrid + "px";
+				li.index = -1;
+				li.innerHTML = li.index;
 				oUl.appendChild(li);
 			}
 			// 由于要检测横竖斜是否有在一条线上的，辅助方式是给每一个网格建立对应的横纵坐标
 			for(var i=0;i<num;i++){
 				for(var j=0;j<num;j++){
-					oLi[i*num+j].innerHTML = j+","+i;
+					// 挂载每一个网格的坐标
+					oLi[i * num + j].x = j;
+					oLi[i * num + j].y = i;
+					// oLi[i*num+j].innerHTML = j+","+i;
+				}
+			}
+		}
+		function setQueen(iQueen){
+			for(var i=0;i<1;i++){
+				// 可以放子的地方-方第一排第一个
+				if(oLi[iQueen*num+i].index == -1){
+					oLi[iQueen * num + i].index = iQueen;
+					oLi[iQueen * num + i].innerHTML = iQueen;
+				}
+				// 方第一排第一个位置后其他位置的横纵及45°方向
+				var x = oLi[iQueen * num + i].x;
+				var y = oLi[iQueen * num + i].y;
+				for(var j=0;j<oLi.length;j++){
+					if(oLi[j].x == x||oLi[j].y == y||oLi[j].x+oLi[j].y == x+y||oLi[j].x - oLi[j].y == x - y){
+						oLi[j].index = iQueen;
+						oLi[j].innerHTML = iQueen;
+					}
 				}
 			}
 		}
