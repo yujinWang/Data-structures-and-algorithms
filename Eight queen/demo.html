@@ -34,11 +34,14 @@
 		var oUl = document.getElementById("ul1");
 		var oLi = document.getElementsByTagName("li");
 		var sizeGrid = 50;
-		var num = 4;
+		var num = 8;
+		// 辅助变量，用来统计总共有多少种情况
+		var iCount = 0;
 		init();
 		function init(){
 			createGird();
 			setQueen(0);
+			console.log(iCount);
 		}
 		function createGird(){
 			var len = num*num;
@@ -62,19 +65,32 @@
 			}
 		}
 		function setQueen(iQueen){
-			for(var i=0;i<1;i++){
+			// 回溯终止条件(递归终止条件)
+			if(iQueen == num){
+				iCount++;
+				return;
+			}
+			for(var i=0;i<num;i++){
 				// 可以放子的地方-方第一排第一个
 				if(oLi[iQueen*num+i].index == -1){
 					oLi[iQueen * num + i].index = iQueen;
 					oLi[iQueen * num + i].innerHTML = iQueen;
-				}
-				// 方第一排第一个位置后其他位置的横纵及45°方向
-				var x = oLi[iQueen * num + i].x;
-				var y = oLi[iQueen * num + i].y;
-				for(var j=0;j<oLi.length;j++){
-					if(oLi[j].x == x||oLi[j].y == y||oLi[j].x+oLi[j].y == x+y||oLi[j].x - oLi[j].y == x - y){
-						oLi[j].index = iQueen;
-						oLi[j].innerHTML = iQueen;
+					// 方第一排第一个位置后其他位置的横纵及45°方向
+					var x = oLi[iQueen * num + i].x;
+					var y = oLi[iQueen * num + i].y;
+					for(var j=0;j<oLi.length;j++){
+						// 需要增加一个条件，当这个网格的索引是-1才去修改，否则将之前为0的也修改了
+						if(oLi[j].index == -1 && (oLi[j].x == x||oLi[j].y == y||oLi[j].x+oLi[j].y == x+y||oLi[j].x - oLi[j].y == x - y)){
+							oLi[j].index = iQueen;
+							oLi[j].innerHTML = iQueen;
+						}
+					}
+					setQueen(iQueen + 1);
+					// 回溯
+					for(var j=0;j<oLi.length;j++){
+						if(oLi[j].index == iQueen){
+							oLi[j].index = -1;
+						}
 					}
 				}
 			}
