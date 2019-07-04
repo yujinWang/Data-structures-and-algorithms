@@ -30,18 +30,30 @@
 	<ul id="ul1">
 
 	</ul>
+	<button id="btn" onclick="clearTimer()">停止</button>
 	<script>
 		var oUl = document.getElementById("ul1");
 		var oLi = document.getElementsByTagName("li");
 		var sizeGrid = 50;
 		var num = 8;
+		// 寻找符合的第一个数组
+		var postArr = [];
+		// 所有结果数组
+		var postArrAll = [];
 		// 辅助变量，用来统计总共有多少种情况
 		var iCount = 0;
+		var timer = null;
+		var flag = true;
 		init();
 		function init(){
 			createGird();
 			setQueen(0);
 			console.log(iCount);
+			console.log(postArrAll[0]);
+			addBackground();
+		}
+		function clearTimer(){
+			clearInterval(timer);
 		}
 		function createGird(){
 			var len = num*num;
@@ -51,7 +63,7 @@
 				li.style.width = sizeGrid+"px";
 				li.style.height = sizeGrid + "px";
 				li.index = -1;
-				li.innerHTML = li.index;
+				// li.innerHTML = li.index;
 				oUl.appendChild(li);
 			}
 			// 由于要检测横竖斜是否有在一条线上的，辅助方式是给每一个网格建立对应的横纵坐标
@@ -67,6 +79,7 @@
 		function setQueen(iQueen){
 			// 回溯终止条件(递归终止条件)
 			if(iQueen == num){
+				postArrAll.push(postArr.concat());
 				iCount++;
 				return;
 			}
@@ -74,7 +87,9 @@
 				// 可以放子的地方-方第一排第一个
 				if(oLi[iQueen*num+i].index == -1){
 					oLi[iQueen * num + i].index = iQueen;
-					oLi[iQueen * num + i].innerHTML = iQueen;
+					// oLi[iQueen * num + i].innerHTML = iQueen;
+					// 放符合的一个子位置
+					postArr.push(oLi[iQueen * num + i]);
 					// 方第一排第一个位置后其他位置的横纵及45°方向
 					var x = oLi[iQueen * num + i].x;
 					var y = oLi[iQueen * num + i].y;
@@ -82,17 +97,30 @@
 						// 需要增加一个条件，当这个网格的索引是-1才去修改，否则将之前为0的也修改了
 						if(oLi[j].index == -1 && (oLi[j].x == x||oLi[j].y == y||oLi[j].x+oLi[j].y == x+y||oLi[j].x - oLi[j].y == x - y)){
 							oLi[j].index = iQueen;
-							oLi[j].innerHTML = iQueen;
+							// oLi[j].innerHTML = iQueen;
 						}
 					}
 					setQueen(iQueen + 1);
 					// 回溯
+					postArr.pop();
 					for(var j=0;j<oLi.length;j++){
 						if(oLi[j].index == iQueen){
 							oLi[j].index = -1;
 						}
 					}
 				}
+			}
+		}
+		function addBackground() {
+			change();
+			timer = setInterval(change,1000);
+			function change(){
+				// 每次执行都需要将网格背景清空
+				for(var i=0;i<oLi.length;i++){
+					oLi[i].style.background = "";
+				}
+				var select = postArrAll[Math.floor(postArrAll.length*Math.random())];
+				select.forEach(item=>item.style.background = "red");
 			}
 		}
 	</script>
