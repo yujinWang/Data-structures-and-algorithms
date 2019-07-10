@@ -38,13 +38,14 @@
 		// 缩短环数
 		var oUl = document.getElementById("ul1");
 		var oLi = document.getElementsByTagName("li");
-		var size = 10;
+		var size = 5;
 		var len = size * size;
 		var sizeGrid = 50;
 		var row = 0;
 		var col = 0;
 		var min = 0;
 		var max = size - 1;
+		var arr = [];
 		oUl.style.width = size * (sizeGrid + 1) + "px";
 		for(var i=0;i< len;i++){
 			var aLi = document.createElement("li");
@@ -55,6 +56,7 @@
 		// 循环设置拐点和缩短环数
 		for(var i=0;i<len;i++){
 			oLi[row*size+col].innerHTML = i;
+			arr.push(oLi[row * size + col]);
 			// 设置拐点
 			if(row == min && col < max){
 				col = col + 1;
@@ -74,6 +76,19 @@
 				max = max - 1;
 			}
 		}
+		var iNow = 0;
+		var timer = setInterval(function(){
+			for(var i=0;i<oLi.length;i++){
+				oLi[i].style.background = "";
+			}
+			if (iNow == oLi.length) {
+				clearInterval(timer);
+				arr[iNow - 1].style.background = "green"; //终点颜色终止
+				return;
+			}
+			arr[iNow].style.background = "red";
+			iNow++;
+		},100)
 	</script>
 </body>
 </html>
