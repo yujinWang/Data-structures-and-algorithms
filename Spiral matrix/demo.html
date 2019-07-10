@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			list-style: none;
+		}
+		#ul1 {
+			margin: 50px auto;
+			border: 1px solid #000;
+			border-bottom: none;
+			border-right: none;
+			overflow: hidden;
+		}
+		#ul1 li {
+			float: left;
+			border: 1px solid #000;
+			border-top: none;
+			border-left: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	</style>
+</head>
+<body>
+	<ul id="ul1">
+
+	</ul>
+	<script>
+		// 设置特殊拐点
+		// 缩短环数
+		var oUl = document.getElementById("ul1");
+		var oLi = document.getElementsByTagName("li");
+		var size = 10;
+		var len = size * size;
+		var sizeGrid = 50;
+		var row = 0;
+		var col = 0;
+		var min = 0;
+		var max = size - 1;
+		oUl.style.width = size * (sizeGrid + 1) + "px";
+		for(var i=0;i< len;i++){
+			var aLi = document.createElement("li");
+			aLi.style.width = sizeGrid + "px";
+			aLi.style.height = sizeGrid + "px";
+			oUl.appendChild(aLi);
+		}
+		// 循环设置拐点和缩短环数
+		for(var i=0;i<len;i++){
+			oLi[row*size+col].innerHTML = i;
+			// 设置拐点
+			if(row == min && col < max){
+				col = col + 1;
+			}
+			else if(col == max && row < max){
+				row = row + 1;
+			}
+			else if(row == max && col > min){
+				col = col - 1;
+			}
+			else if(col == min && row > min){
+				row = row - 1;
+			}
+			// 缩短环数-行数加1，列数减1
+			if(row - 1 == min && col == min){
+				min = min + 1;
+				max = max - 1;
+			}
+		}
+	</script>
+</body>
+</html>
