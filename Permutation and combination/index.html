@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// 每一层的实现原理是相同的，用到了递归
+		var arr = ["A","B","C","D"];
+		// var arr = ["A", "B", "C"];
+		function show(arr,num){
+			// 当从n个元素中选一个的时候返回该数组的长度即可
+			if(num == 1){
+				return arr.length;
+			}
+
+			var resultNum = 0;
+			var iNow = 1;
+			function change(arr,iNow){
+				for(var i=0;i<arr.length;i++){
+					// 为避免产生引用，创建一个arr的副本
+					var result = arr.concat();
+					result.splice(i,1);
+					if(iNow == num){
+						resultNum += result.length;
+					}else{
+						change(result, iNow + 1);
+					}
+				}
+			}
+			change(arr,iNow+1);
+			return resultNum;
+		}
+		console.log(show(arr,2));
+	</script>
+</body>
+</html>
