@@ -12,27 +12,34 @@
 		function show(arr,num){
 			// 当从n个元素中选一个的时候返回该数组的长度即可
 			if(num == 1){
-				return arr.length;
+				arr.push(arr.length);
+				return arr;
 			}
-
+			// 可能的结果情况数组
+			var resultArr = [];
 			var resultNum = 0;
 			var iNow = 1;
-			function change(arr,iNow){
+			function change(arr,iNow,str){
 				for(var i=0;i<arr.length;i++){
 					// 为避免产生引用，创建一个arr的副本
 					var result = arr.concat();
-					result.splice(i,1);
+					var strClone = str;
+					strClone += result.splice(i,1);
 					if(iNow == num){
 						resultNum += result.length;
+						for(var j=0;j< result.length;j++){
+							resultArr.push(strClone + result[j]);
+						}
 					}else{
-						change(result, iNow + 1);
+						change(result, iNow + 1, strClone);
 					}
 				}
 			}
-			change(arr,iNow+1);
-			return resultNum;
+			change(arr,iNow+1,"");
+			resultArr.push(resultNum);
+			return resultArr; 
 		}
-		console.log(show(arr,2));
+		console.log(show(arr,3));
 	</script>
 </body>
 </html>
