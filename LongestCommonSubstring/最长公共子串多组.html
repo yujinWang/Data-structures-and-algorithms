@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// 基本思路，先找一个基准，再排列出这个基准里面所有的排列可能性，然后再与其他的项进行正则匹配，再找到最长的那个
+			var strArr = ['helloshow', 'showhaha', 'hishow', 'showtomrow', 'xixishow']
+			function long(arr) {
+				var basic = strArr[0]
+				var startArr = []
+				var count = 0
+				var result = ''
+				for (var i = 0; i < basic.length; i++) {
+					for (var j = i + 1; j <= basic.length; j++) {
+						startArr.push(basic.substring(i, j))
+					}
+				}
+				for (var i = 0; i < startArr.length; i++) {
+					var reg = new RegExp(startArr[i])
+					var wholeArr = []
+					for (var j = 1; j < arr.length; j++) {
+						var reArr = arr[j].match(reg)
+						if (reArr) {
+							wholeArr = wholeArr.concat(reArr)
+						}
+					}
+					// console.log(wholeArr)
+					// wholeArr为排除第一项后的长度，所以后面的判断条件需写为-1
+					if (wholeArr.length == arr.length - 1) {
+						if (wholeArr[0].length > count) {
+							count = wholeArr[0].length
+							result = wholeArr[0]
+						}
+					}
+				}
+				return result
+			}
+			console.log(long(strArr))
+			// 优化，因为是随机选择的第一项，如果字符串较长会产生非常多的排列组合问题，可以对数组内字符串先排序然后取最短的为基准
+		</script>
+	</body>
+</html>

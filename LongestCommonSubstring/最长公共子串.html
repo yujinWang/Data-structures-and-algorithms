@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			var arr = ['acdshowrgft', 'poildshowgftp']
+			function longPublic(arr) {
+				var arr0 = arr[0]
+				var arr1 = arr[1]
+				var count = 0 // 连续出现的相等字符次数
+				var index = 0 // 最长子串第一个字符出现的索引
+				for (var i = 0; i < arr0.length; i++) {
+					for (var j = 0; j < arr1.length; j++) {
+						if (arr0[i] == arr1[j]) {
+							// 找到第i项和第j项相等，继续由此找下一项是否相等，定义k为累计连续出现次数计数
+							var k = 1
+							while (arr0[i + k] == arr1[j + k]) {
+								k++
+								if (k > count) {
+									count = k
+									index = i
+								}
+							}
+						}
+					}
+				}
+				return arr0.substr(index, count)
+			}
+			console.log(arr[0])
+			console.log(arr[1])
+			console.log(longPublic(arr))
+		</script>
+	</body>
+</html>
