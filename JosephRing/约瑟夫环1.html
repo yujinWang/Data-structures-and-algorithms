@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 传说在犹太战争中，约瑟夫和他一个朋友还有39个犹太士兵被罗马军队包围，他们决定誓死不投降
+        // 所以商量出一个自杀的方案，他们围成一个圈，从一个人开始，数到第三个人时将第三个人杀死，
+        // 然后再数，直到杀光所有的人，约瑟夫和他的朋友决定不参加这个疯狂的游戏，他们快速地计算出了
+        // 两个位置，站在那里得以幸免
+        // 开发中极少会用到此例子所涉及到的东西，不过此题用链表这种数据结构来解决问题
+        // 链表是由一组节点组成的集合，每个节点都使用一个对象的引用指向它的后继(下一项)
+        // 指向另一个节点的引用叫做链
+        // 链表通常先指定起始和结束的点，起始点如head，结束点为null
+
+
+        // 每一个节点可以通过面向对象的方式来创建
+        function Node(element) { // element表示链表中的每一个节点，next定义后继点(下一步要去的点)
+            this.element = element
+            this.next = null 
+        }
+        // 整体链表的构造函数
+        function LList() {
+            this.head = new Node('head') // 初始化头部节点
+            this.head.next = this.head // 此处需要循环链表
+            this.length = 0 // 链表初始长度
+        }
+        // 查找指定节点的方法-后一个
+        LList.prototype.find = function(item) {
+            var currNode = this.head
+            while(currNode.element != item) {
+                currNode = currNode.next
+            }
+            return currNode
+        }
+        // 查找指定节点的方法-前一个
+        LList.prototype.findPrev = function(item) {
+            var currNode = this.head
+            while(currNode != null && currNode.next.element != item) {
+                currNode = currNode.next
+            }
+            return currNode
+        }
+        // 添加节点，使用前面的定义，新的节点索引指向下一个新的节点
+        LList.prototype.insert = function(newElement,item) {
+            var newNode = new Node(newElement)
+            var currNode = this.find(item)
+            newNode.next = currNode.next
+            currNode.next = newNode
+            this.length++ // 添加节点链表长度增加
+        }
+        // 删除节点
+        LList.prototype.remove = function(item) {
+            var prevNode = this.findPrev(item) // 找到前一个节点
+            var currNode = this.find(item) // 找到当前节点
+            prevNode.next = currNode.next // 将当前节点赋值给前一个节点即实现删除当前节点的功能
+            this.length-- // 删除节点链表长度减小
+        }
+        // 为便于查看结果，将head后面的结果输出
+        LList.prototype.display = function() {
+            var currNode = this.head
+            var result = [] // 结果输出数组
+            while(currNode.next != null && currNode.next.element != 'head') { // 添加条件不等于'head'
+                result.push(currNode.next.element)
+                currNode = currNode.next
+            }
+            return result
+        }
+
+        function killGame(num,step) {
+            var people = new LList()
+            people.insert(1,'head')
+            for(var i=1;i<num;i++) {
+                people.insert(i+1,i)
+            }
+            console.log(people.display())
+
+            var iNow = 0
+            var dir = 'head'
+            function whileFn() {
+                if(people.length < step) {
+                    return
+                }
+                iNow++
+                dir = people.find(dir).next.element
+                if(dir == 'head') {
+                    dir = people.find(dir).next.element
+                }
+                if(iNow == step) {
+                    var removeDir = dir // dir不可直接使用，临时保存
+                    dir = people.findPrev(dir).element // dir被删除后需修改
+                    people.remove(removeDir)
+                    iNow = 0
+                }
+                whileFn()
+            }
+            whileFn()
+            console.log('幸存的位置是：',people.display())
+        }
+        killGame(41, 3) // 总共41，每数到3删除一个节点
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

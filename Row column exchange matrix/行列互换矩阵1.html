@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			li {
+				list-style: none;
+			}
+			#ul1 {
+				margin: 100px auto;
+				overflow: hidden; /* 加此属性，否则最左边的边框会不显示 */
+				background: rgb(27, 31, 42);
+			}
+			#ul1 li {
+				float: left;
+			}
+			#ul1 li.box0 {
+				background: url('./img/1.jpg') no-repeat;
+			}
+			#ul1 li.box1 {
+				background: url('./img/2.jpg') no-repeat;
+			}
+			#ul1 li.box2 {
+				background: url('./img/3.jpg') no-repeat;
+			}
+			#ul1 li.box3 {
+				background: url('./img/4.jpg') no-repeat;
+			}
+			#ul1 li.box4 {
+				background: url('./img/5.jpg') no-repeat;
+			}
+			#ul1 li.box5 {
+				background: url('./img/6.jpg') no-repeat;
+			}
+		</style>
+	</head>
+	<body>
+		<ul id="ul1"></ul>
+		<script>
+			var arr1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+			var arr2 = [0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]
+			// 实现方式1、递归  2、取模
+			var oUl = document.getElementById('ul1')
+			var aLi = document.getElementsByTagName('li')
+			var liW = 70 // 小网格宽高
+			var arr = [] // 原始数组
+			var num = 7
+			var len = num * num
+			oUl.style.width = num * liW + 'px'
+			// 网格绘制
+			for (var i = 0; i < len; i++) {
+				var oLi = document.createElement('li')
+				oLi.style.width = liW + 'px'
+				oLi.style.height = liW + 'px'
+				oLi.className = 'box' + Math.floor(Math.random() * 6) // 给li添加随机class，对应不同的图片
+				oUl.appendChild(oLi)
+			}
+
+			// 查找横着相连的相同的三个元素
+			findElem()
+			function findElem() {}
+
+			// 递归-采用递归来代替上面的多个for循环
+			function changeXY1(arr, size) {
+				var newArray1 = []
+				var iNow = 0
+				;(function () {
+					if (iNow == size) {
+						// 递归终止条件
+						return
+					}
+					for (var i = 0; i < arr.length; i++) {
+						if (i % size == iNow) {
+							newArray1.push(arr[i])
+						}
+					}
+					iNow++
+					arguments.callee() // 递归调用，递归调用需加终止条件
+				})()
+
+				return newArray1
+			}
+			// 2----修改为递归写法的形式-修改为7需要同步将上面网格数量也修改为一行7个
+			// arr = changeXY1(arr, 7)
+		</script>
+	</body>
+</html>

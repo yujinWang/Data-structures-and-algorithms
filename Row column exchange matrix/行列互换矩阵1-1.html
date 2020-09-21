@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			li {
+				list-style: none;
+			}
+			#ul1 {
+				margin: 100px auto;
+				overflow: hidden; /* 加此属性，否则最左边的边框会不显示 */
+				background: rgb(27, 31, 42);
+			}
+			#ul1 li {
+				float: left;
+			}
+			#ul1 li.box0 {
+				background: url('./img/1.jpg') no-repeat;
+			}
+			#ul1 li.box1 {
+				background: url('./img/2.jpg') no-repeat;
+			}
+			#ul1 li.box2 {
+				background: url('./img/3.jpg') no-repeat;
+			}
+			#ul1 li.box3 {
+				background: url('./img/4.jpg') no-repeat;
+			}
+			#ul1 li.box4 {
+				background: url('./img/5.jpg') no-repeat;
+			}
+			#ul1 li.box5 {
+				background: url('./img/6.jpg') no-repeat;
+			}
+		</style>
+	</head>
+	<body>
+		<ul id="ul1"></ul>
+		<script>
+			var arr1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+			var arr2 = [0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]
+			// 实现方式1、递归  2、取模
+			var oUl = document.getElementById('ul1')
+			var aLi = document.getElementsByTagName('li')
+			var liW = 70 // 小网格宽高
+			var arr = [] // 原始数组
+			var num = 7
+			var len = num * num
+			oUl.style.width = num * liW + 'px'
+			// 网格绘制
+			for (var i = 0; i < len; i++) {
+				var oLi = document.createElement('li')
+				oLi.style.width = liW + 'px'
+				oLi.style.height = liW + 'px'
+				oLi.className = 'box' + Math.floor(Math.random() * 6) // 给li添加随机class，对应不同的图片
+				oUl.appendChild(oLi)
+			}
+
+			// 查找横着相连的相同的三个元素
+			findElem()
+			function findElem() {
+				var result = [] // 找到所有相邻的结果都保存到这个数组中
+				function addArr(aLi) {
+				var prevLi = aLi[0] // 定义一个起始点，以此为基础找和它相邻的li元素的className相同的
+				var iNum = 0
+				for(var i=0;i<aLi.length;i++) {
+					if(prevLi.className == aLi[i].className && i%num != 0) { // 数组维度来讲相连的如果位于第一列就得排除，添加条件i%num != 0
+						iNum++
+					}else {
+						// else中收集符合要求的li元素
+						// 当找到连续3个及以上的时候的li元素就是我们要找的，由iNum来判断 0 1 2
+						if(iNum >= 2) {
+							// 推导出i和j的关系，然后添加
+							// i => 6
+							// j => 0 1 2
+							for(var j=0;j<=iNum;j++) {
+								if(toCom(aLi[(i-1)-j])) {
+									result.unshift(aLi[(i-1)-j])
+								}
+							}
+						}
+						iNum = 0 // 在else中，对于每一次循环，都需要将iNum重置为0，才能进行下一次的循环
+					}
+					prevLi = aLi[i] // 循环中不断修改prevLi的值，遍历到每个li元素
+				}
+				}
+				// 元素可能存在重复项，需添加判断去重
+				function toCom(li) {
+					for(var i=0;i<result.length;i++) {
+						if(result[i] == li) {
+							return false
+						}
+					}
+					return true
+				}
+				addArr(aLi) // 封装函数，便于后面调用行列矩阵互换方法
+				addArr(changeXY1(aLi, num)) // 行列矩阵互换后的内容作为参数再被调用一次，输出到结果中
+				// 区分下找到的元素是哪些，通过设置找到的和其他的透明度不同的方式实现
+				for(var i=0;i<aLi.length;i++) {
+					aLi[i].style.opacity = 0.3
+				}
+				for(var i=0;i<result.length;i++) {
+					result[i].style.opacity = 1
+				}
+				console.log(result)
+			}
+
+			// 递归-采用递归来代替上面的多个for循环
+			function changeXY1(arr, size) {
+				var newArray1 = []
+				var iNow = 0
+				;(function () {
+					if (iNow == size) {
+						// 递归终止条件
+						return
+					}
+					for (var i = 0; i < arr.length; i++) {
+						if (i % size == iNow) {
+							newArray1.push(arr[i])
+						}
+					}
+					iNow++
+					arguments.callee() // 递归调用，递归调用需加终止条件
+				})()
+
+				return newArray1
+			}
+			// 2----修改为递归写法的形式-修改为7需要同步将上面网格数量也修改为一行7个
+			// arr = changeXY1(arr, 7)
+		</script>
+	</body>
+</html>
