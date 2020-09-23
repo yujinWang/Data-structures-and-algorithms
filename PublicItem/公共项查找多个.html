@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			var arr1 = [1, 2, 5, 8, 1]
+			var arr2 = [6, 4, 2, 1, 6, 4]
+			function public(arr1, arr2) {
+				var result = []
+				for (var i = 0; i < onlyItem(arr1).length; i++) {
+					for (var j = 0; j < onlyItem(arr2).length; j++) {
+						if (arr1[i] == arr2[j]) {
+							result.push(arr1[i])
+						}
+					}
+				}
+				return result
+			}
+			// 数组去重es6
+			function onlyItem(arr) {
+				return Array.from(new Set(arr))
+			}
+			// 数组去重json
+			function unique(arr) {
+				var json = {}
+				var result = []
+				for (var i = 0; i < arr.length; i++) {
+					if (!json[arr[i]]) {
+						json[arr[i]] = 1 // 出现的次数
+						result.push(arr[i])
+					}
+				}
+				return result
+			}
+			// 多组的情况下可以将数组去重并合并，然后找到每个出现的次数，最后找到最多的就是公共子项
+			var arrDuo = [
+				[1, 2, 4],
+				[1, 3, 4],
+				[1, 4, 7, 4],
+				[3, 5, 4, 1, 4],
+			]
+			function publicDuo(arr) {
+				var allArr = []
+				var json = {}
+				var result = []
+				// 去重并合并
+				for (var i = 0; i < arr.length; i++) {
+					allArr = allArr.concat(unique(arr[i]))
+				}
+				// 统计每个出现的次数
+				for (var i = 0; i < allArr.length; i++) {
+					if (!json[allArr[i]]) {
+						json[allArr[i]] = [allArr[i]] // 这里为什么要用数组形式
+					} else {
+						json[allArr[i]].push([allArr[i]])
+					}
+				}
+				// 找到出现次数最多的返回
+				for (var k in json) {
+					if (json[k].length == arr.length) {
+						result.push(k)
+					}
+				}
+				return result
+				// console.log(allArr)
+				// console.log(json)
+			}
+			console.log(publicDuo(arrDuo))
+		</script>
+	</body>
+</html>

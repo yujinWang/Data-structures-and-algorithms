@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			var arr1 = [1, 2, 5, 8, 1]
+			var arr2 = [6, 4, 2, 1, 6, 4]
+			function public(arr1, arr2) {
+				var result = []
+				for (var i = 0; i < onlyItem(arr1).length; i++) {
+					for (var j = 0; j < onlyItem(arr2).length; j++) {
+						if (arr1[i] == arr2[j]) {
+							result.push(arr1[i])
+						}
+					}
+				}
+				return result
+			}
+			// 数组去重es6
+			function onlyItem(arr) {
+				return Array.from(new Set(arr))
+			}
+			// 数组去重json
+			function unique(arr) {
+				var json = {}
+				var result = []
+				for (var i = 0; i < arr.length; i++) {
+					if (!json[arr[i]]) {
+						json[arr[i]] = 1 // 出现的次数
+						result.push(arr[i])
+						break //当第一项的1匹配到第二个数组中的1之后就跳出不用匹配完整个数组
+					}
+				}
+				return result
+			}
+			console.log(unique(arr1))
+			console.log(onlyItem(arr1))
+			console.log(onlyItem(arr2))
+			console.log(public(arr1, arr2))
+		</script>
+	</body>
+</html>
